@@ -27,6 +27,11 @@ var getMaxElement = function (arr) {
   return maxElement;
 };
 
+var getColor = function (name) {
+  var othersColor = 'hsl(' + 240 + ',' + Math.floor(Math.random() * 101) + '%,' + 50 + '%)';
+  return (name === 'Вы') ? 'rgba(255, 0, 0, 1)' : othersColor;
+};
+
 window.renderStatistics = function (ctx, names, times) {
   renderCloud(ctx, CLOUD_X + 10, CLOUD_Y + 10, 'rgba(0, 0, 0, 0.7)');
   renderCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
@@ -40,17 +45,9 @@ window.renderStatistics = function (ctx, names, times) {
   var maxTime = getMaxElement(times);
 
   for (var i = 0; i < names.length; i++) {
-    var randomizeSaturation = function () {
-      if (names[i] === 'Вы') {
-        var color = 'rgba(255, 0, 0, 1)';
-      } else {
-        color = 'hsl(' + 240 + ',' + Math.floor(Math.random() * 101) + '%,' + 50 + '%)';
-      }
-      return color;
-    };
     ctx.fillStyle = '#000';
     ctx.fillText(names[i], CLOUD_X + GAP * 2 + (BAR_WIDTH + BAR_GAP) * i, CLOUD_Y + CLOUD_HEIGHT - 30);
-    ctx.fillStyle = randomizeSaturation(ctx, names);
+    ctx.fillStyle = getColor(names[i]);
     var newBarHeight = BAR_HEIGHT * times[i] / maxTime;
     var deltaHeight = BAR_HEIGHT - newBarHeight;
     ctx.fillRect(CLOUD_X + GAP * 2 + (BAR_WIDTH + BAR_GAP) * i, BAR_Y + deltaHeight, BAR_WIDTH, newBarHeight);
