@@ -10,6 +10,7 @@ var BAR_WIDTH = 40;
 var BAR_Y = CLOUD_Y + (GAP + TEXT_HEIGHT) * 2;
 var BAR_HEIGHT = 150;
 var BAR_GAP = 50;
+var YOUR_COLOR = 'rgba(255, 0, 0, 1)';
 
 var renderCloud = function (ctx, x, y, color) {
   ctx.fillStyle = color;
@@ -29,7 +30,7 @@ var getMaxElement = function (arr) {
 
 var getColor = function (name) {
   var othersColor = 'hsl(' + 240 + ',' + Math.floor(Math.random() * 101) + '%,' + 50 + '%)';
-  return (name === 'Вы') ? 'rgba(255, 0, 0, 1)' : othersColor;
+  return (name === 'Вы') ? YOUR_COLOR : othersColor;
 };
 
 window.renderStatistics = function (ctx, names, times) {
