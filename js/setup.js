@@ -1,24 +1,117 @@
 'use strict';
 
-var userDialog = document.querySelector('.setup');
+// массивы с данными
+var FIRST_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
+var SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
+var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
+var EYE_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
+var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
+
+var ESC_KEY = 'Escape';
+var ENTER_KEY = 'Enter';
+
+var setup = document.querySelector('.setup');
+var setupOpen = document.querySelector('.setup-open');
+var setupClose = setup.querySelector('.setup-close');
+var userNameInput = setup.querySelector('.setup-user-name');
+
+var setupPlayer = document.querySelector('.setup-player');
+var setupWizard = setupPlayer.querySelector('.setup-wizard');
+var wizardCoat = setupWizard.querySelector('.wizard-coat');
+var wizardCoatInput = setupPlayer.querySelector('input[name="coat-color"]');
+var wizardEyes = setupWizard.querySelector('.wizard-eyes');
+var wizardEyesInput = setupPlayer.querySelector('input[name="eyes-color"]');
+var fireballColor = setupPlayer.querySelector('.setup-fireball-wrap');
+var fireballColorInput = fireballColor.querySelector('input[name="fireball-color"]');
 
 // шаблон, который будем копировать
-var similarWizardTemplate = document.querySelector('#similar-wizard-template')
-  .content
-  .querySelector('.setup-similar-item');
+var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
 
 // элемент, в который вставляем похожих магов
 var similarListElement = document.querySelector('.setup-similar-list');
 
 var wizards = [];
 
-// массивы с данными
-var FIRST_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
-var SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
-var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
-var EYE_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
+var onPopupEscPress = function (evt) {
+  if (evt.key === ESC_KEY) {
+    closePopup();
+  }
+};
 
-userDialog.classList.remove('hidden');
+var openPopup = function () {
+  setup.classList.remove('hidden');
+
+  // при нажатии на Esc закрываем попап
+  document.addEventListener('keydown', onPopupEscPress);
+};
+
+var closePopup = function () {
+  setup.classList.add('hidden');
+
+  // удаляем обработчик закрытия по нажатию на Esc после закрытия попапа
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+
+// при клике на иконку с фото открывается попап
+setupOpen.addEventListener('click', function () {
+  openPopup();
+});
+
+// если фокус на иконке с фото, нажатие на Enter открывает попап
+setupOpen.addEventListener('keydown', function (evt) {
+  if (evt.key === ENTER_KEY) {
+    setup.classList.remove('hidden');
+  }
+});
+
+// при клике на крестик закрывается попап
+setupClose.addEventListener('click', function () {
+  closePopup();
+});
+
+// если фокус на крестике, нажатие на Enter закрывает попап
+setupClose.addEventListener('keydown', function (evt) {
+  if (evt.key === ENTER_KEY) {
+    setup.classList.add('hidden');
+  }
+});
+
+userNameInput.addEventListener('invalid', function () {
+  if (userNameInput.validity.tooShort) {
+    userNameInput.setCustomValidity('Имя должно состоять минимум из 2-х символов');
+  } else if (userNameInput.validity.tooLong) {
+    userNameInput.setCustomValidity('Имя не должно превышать 25-ти символов');
+  } else if (userNameInput.validity.valueMissing) {
+    userNameInput.setCustomValidity('Обязательное поле');
+  } else {
+    userNameInput.setCustomValidity('');
+  }
+});
+
+var changeColor = function (colors, wizardPart, input) {
+  var colorChoice = colors[getRandomNumber(0, colors.length)];
+  wizardPart.style.fill = colorChoice;
+  input.value = colorChoice;
+};
+
+var changeBgColor = function (colors, wizardPart, input) {
+  var bgColorChoice = colors[getRandomNumber(0, colors.length)];
+  wizardPart.style.backgroundColor = bgColorChoice;
+  input.value = bgColorChoice;
+};
+
+wizardCoat.addEventListener('click', function () {
+  changeColor(COAT_COLORS, wizardCoat, wizardCoatInput);
+});
+
+wizardEyes.addEventListener('click', function () {
+  changeColor(EYE_COLORS, wizardEyes, wizardEyesInput);
+});
+
+fireballColor.addEventListener('click', function () {
+  changeBgColor(FIREBALL_COLORS, fireballColor, fireballColorInput);
+});
+
 
 var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
@@ -56,4 +149,4 @@ createSimilarWizards(wizards);
 
 similarListElement.appendChild(fragment);
 
-userDialog.querySelector('.setup-similar').classList.remove('hidden');
+setup.querySelector('.setup-similar').classList.remove('hidden');
