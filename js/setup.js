@@ -33,7 +33,7 @@ var similarListElement = document.querySelector('.setup-similar-list');
 var wizards = [];
 
 var onPopupEscPress = function (evt) {
-  if (evt.keyCode === ESC_KEY) {
+  if (evt.keyCode === ESC_KEY && userNameInput !== document.activeElement) {
     closePopup();
   }
 };
@@ -63,11 +63,7 @@ setupOpen.addEventListener('keydown', function (evt) {
 });
 
 // при клике на крестик закрывается попап
-setupClose.addEventListener('click', function () {
-  if (!userNameInput.activeElement) {
-    closePopup();
-  }
-});
+setupClose.addEventListener('click', closePopup);
 
 // если фокус на крестике, нажатие на Enter закрывает попап
 setupClose.addEventListener('keydown', function (evt) {
