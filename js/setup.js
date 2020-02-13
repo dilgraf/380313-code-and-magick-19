@@ -7,8 +7,8 @@ var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161
 var EYE_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
 
-var ESC_KEY = 'Escape';
-var ENTER_KEY = 'Enter';
+var ESC_KEY = 27;
+var ENTER_KEY = 13;
 
 var setup = document.querySelector('.setup');
 var setupOpen = document.querySelector('.setup-open');
@@ -33,7 +33,7 @@ var similarListElement = document.querySelector('.setup-similar-list');
 var wizards = [];
 
 var onPopupEscPress = function (evt) {
-  if (evt.key === ESC_KEY) {
+  if (evt.keyCode === ESC_KEY) {
     closePopup();
   }
 };
@@ -53,29 +53,30 @@ var closePopup = function () {
 };
 
 // при клике на иконку с фото открывается попап
-setupOpen.addEventListener('click', function () {
-  openPopup();
-});
+setupOpen.addEventListener('click', openPopup);
 
 // если фокус на иконке с фото, нажатие на Enter открывает попап
 setupOpen.addEventListener('keydown', function (evt) {
-  if (evt.key === ENTER_KEY) {
+  if (evt.keyCode === ENTER_KEY) {
     setup.classList.remove('hidden');
   }
 });
 
 // при клике на крестик закрывается попап
 setupClose.addEventListener('click', function () {
-  closePopup();
+  if (!userNameInput.activeElement) {
+    closePopup();
+  }
 });
 
 // если фокус на крестике, нажатие на Enter закрывает попап
 setupClose.addEventListener('keydown', function (evt) {
-  if (evt.key === ENTER_KEY) {
+  if (evt.keyCode === ENTER_KEY) {
     setup.classList.add('hidden');
   }
 });
 
+// валидация имени
 userNameInput.addEventListener('invalid', function () {
   if (userNameInput.validity.tooShort) {
     userNameInput.setCustomValidity('Имя должно состоять минимум из 2-х символов');
